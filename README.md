@@ -1,6 +1,6 @@
-# Kontora — Financial management for freelancers & small businesses
+# FINMEI Financial — Financial management for freelancers & small businesses
 
-Kontora is a full-stack SaaS app for invoices, customers, expenses, recurring billing,
+FINMEI Financial is a full-stack SaaS app for invoices, customers, expenses, recurring billing,
 payments and financial reports. You can run several businesses from one account, and
 each business keeps its own separate data.
 

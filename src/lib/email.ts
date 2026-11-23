@@ -22,13 +22,13 @@ export async function sendMail(mail: Mail) {
     secure: Number(process.env.SMTP_PORT) === 465,
     auth: process.env.SMTP_USER ? { user: process.env.SMTP_USER, pass: process.env.SMTP_PASSWORD } : undefined,
   });
-  await transport.sendMail({ from: process.env.EMAIL_FROM || "Kontora <no-reply@kontora.app>", ...mail });
+  await transport.sendMail({ from: process.env.EMAIL_FROM || "FINMEI Financial <no-reply@finmei.online>", ...mail });
 }
 
 function layout(title: string, body: string, cta?: { label: string; url: string }) {
   return `<!doctype html><html><body style="margin:0;background:#f6f7fb;font-family:Inter,Segoe UI,Arial,sans-serif;color:#0f172a">
   <div style="max-width:520px;margin:40px auto;background:#fff;border-radius:14px;padding:32px;border:1px solid #e5e7eb">
-    <div style="font-weight:700;font-size:18px;margin-bottom:24px"><span style="display:inline-block;width:22px;height:22px;border-radius:6px;background:#4f46e5;vertical-align:middle;margin-right:8px"></span>Kontora</div>
+    <div style="font-weight:700;font-size:18px;margin-bottom:24px"><span style="display:inline-block;width:22px;height:22px;border-radius:6px;background:#4f46e5;vertical-align:middle;margin-right:8px"></span>FINMEI Financial</div>
     <h1 style="font-size:20px;margin:0 0 12px">${title}</h1>
     <div style="font-size:14px;line-height:1.6;color:#334155">${body}</div>
     ${cta ? `<a href="${cta.url}" style="display:inline-block;margin-top:24px;background:#4f46e5;color:#fff;text-decoration:none;padding:10px 18px;border-radius:8px;font-weight:600;font-size:14px">${cta.label}</a>
@@ -40,9 +40,9 @@ export async function sendVerificationEmail(to: string, token: string) {
   const url = appUrl(`/verify-email?token=${encodeURIComponent(token)}`);
   await sendMail({
     to,
-    subject: "Verify your Kontora email",
-    text: `Welcome to Kontora! Verify your email: ${url}\nThis link expires in 24 hours.`,
-    html: layout("Confirm your email", "Welcome to Kontora! Please confirm your email address to activate your account. This link expires in 24 hours.", { label: "Verify email", url }),
+    subject: "Verify your FINMEI Financial email",
+    text: `Welcome to FINMEI Financial! Verify your email: ${url}\nThis link expires in 24 hours.`,
+    html: layout("Confirm your email", "Welcome to FINMEI Financial! Please confirm your email address to activate your account. This link expires in 24 hours.", { label: "Verify email", url }),
   });
 }
 
@@ -50,7 +50,7 @@ export async function sendPasswordResetEmail(to: string, token: string) {
   const url = appUrl(`/reset-password?token=${encodeURIComponent(token)}`);
   await sendMail({
     to,
-    subject: "Reset your Kontora password",
+    subject: "Reset your FINMEI Financial password",
     text: `Reset your password: ${url}\nThis link expires in 1 hour. If you didn't request it, ignore this email.`,
     html: layout("Reset your password", "We received a request to reset your password. This link expires in 1 hour. If you didn't request this, you can safely ignore this email.", { label: "Reset password", url }),
   });

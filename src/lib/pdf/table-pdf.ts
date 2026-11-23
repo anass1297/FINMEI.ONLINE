@@ -15,7 +15,7 @@ export async function renderTablePdf(opts: {
 }) {
   const doc = await PDFDocument.create();
   doc.setTitle(opts.title);
-  doc.setCreator("Kontora");
+  doc.setCreator("FINMEI Financial");
   const { regular, bold } = await loadFonts(doc, "sans");
   const [W, H] = opts.landscape ? [841.89, 595.28] : [595.28, 841.89];
   const M = 40;

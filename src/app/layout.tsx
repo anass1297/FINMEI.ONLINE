@@ -7,7 +7,7 @@ import { ToastProvider } from "@/components/ui/toast";
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans", display: "swap" });
 
 export const metadata: Metadata = {
-  title: { default: "Kontora — Invoicing & finances for modern businesses", template: "%s · Kontora" },
+  title: { default: "FINMEI Financial — Invoicing & finances for modern businesses", template: "%s · FINMEI Financial" },
   description: "Invoices, customers, expenses, recurring billing and financial reports in one calm workspace.",
 };
 export const viewport: Viewport = {

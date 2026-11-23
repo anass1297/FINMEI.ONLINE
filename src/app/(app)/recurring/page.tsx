@@ -27,7 +27,7 @@ export default async function Page() {
         actions={<><RunNowButton /><LinkButton href="/recurring/new"><Plus size={16} /> New schedule</LinkButton></>} />
       <Card>
         {list.length === 0 ? (
-          <EmptyState icon={<Repeat size={22} />} title="No recurring invoices" description="Set up a schedule once and Kontora creates the invoices for you — weekly, monthly, quarterly, annually or on a custom cycle."
+          <EmptyState icon={<Repeat size={22} />} title="No recurring invoices" description="Set up a schedule once and FINMEI Financial creates the invoices for you — weekly, monthly, quarterly, annually or on a custom cycle."
             action={<LinkButton href="/recurring/new"><Plus size={16} /> New schedule</LinkButton>} />
         ) : (
           <div className="overflow-x-auto">

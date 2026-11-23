@@ -1,4 +1,4 @@
-// Kontora data model.
+// FINMEI Financial data model.
 // Money is stored as integer minor units (cents) to avoid floating point errors.
 // String "enums" are used so the schema runs on SQLite and PostgreSQL alike.
 

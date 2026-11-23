@@ -71,7 +71,7 @@ export function LoginForm({ google }: { google: boolean }) {
   return (
     <>
       <h1 className="text-2xl font-semibold tracking-tight">Welcome back</h1>
-      <p className="mt-1 text-sm text-subtle">Sign in to your Kontora workspace.</p>
+      <p className="mt-1 text-sm text-subtle">Sign in to your FINMEI Financial workspace.</p>
       <div className="mt-8 space-y-4">
         {google && (<><GoogleButton callbackUrl={callbackUrl} /><Divider /></>)}
         {params.get("verified") && <Alert tone="success">Email verified — you can sign in now.</Alert>}

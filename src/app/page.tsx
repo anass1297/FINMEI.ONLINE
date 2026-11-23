@@ -40,7 +40,7 @@ export default async function Landing() {
         <div className="relative mx-auto max-w-6xl px-4 pb-16 pt-20 text-center sm:px-6 sm:pt-28">
           <span className="inline-flex items-center gap-2 rounded-full border bg-surface px-3 py-1 text-xs text-subtle"><span className="h-1.5 w-1.5 rounded-full bg-success" /> Invoicing · Expenses · Reports</span>
           <h1 className="mx-auto mt-6 max-w-3xl text-4xl font-semibold tracking-tight sm:text-6xl">The calm way to run your business finances.</h1>
-          <p className="mx-auto mt-5 max-w-xl text-base text-subtle sm:text-lg">Kontora brings invoices, customers, expenses, recurring billing and reports into one focused workspace — built for freelancers, agencies and small teams.</p>
+          <p className="mx-auto mt-5 max-w-xl text-base text-subtle sm:text-lg">FINMEI Financial brings invoices, customers, expenses, recurring billing and reports into one focused workspace — built for freelancers, agencies and small teams.</p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link href="/register" className="inline-flex h-11 items-center gap-2 rounded-lg bg-brand px-6 text-sm font-medium text-white shadow-sm hover:bg-brand/90">Create free account <ArrowRight size={16} /></Link>
             <Link href="/login" className="inline-flex h-11 items-center rounded-lg border bg-surface px-6 text-sm font-medium hover:bg-muted">Sign in</Link>
@@ -81,7 +81,7 @@ export default async function Landing() {
 
       <footer className="border-t">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-4 py-8 text-xs text-subtle sm:flex-row sm:px-6">
-          <Logo /><p>© {new Date().getFullYear()} Kontora. All rights reserved.</p>
+          <Logo /><p>© {new Date().getFullYear()} FINMEI Financial. All rights reserved.</p>
         </div>
       </footer>
     </div>

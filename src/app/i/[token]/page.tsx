@@ -30,7 +30,7 @@ export default async function PublicInvoice({ params }: { params: { token: strin
           <a href={`/api/public/invoices/${params.token}/pdf`} className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-brand px-5 text-sm font-medium text-white hover:bg-brand/90"><Download size={16} /> Download PDF</a>
         </div>
         <InvoiceDocument business={toDocBusiness(inv.business)} invoice={doc} />
-        <p className="mt-6 flex items-center justify-center gap-2 text-xs text-subtle"><ShieldCheck size={14} /> Secure invoice link · Powered by <LogoMark size={14} /> Kontora</p>
+        <p className="mt-6 flex items-center justify-center gap-2 text-xs text-subtle"><ShieldCheck size={14} /> Secure invoice link · Powered by <LogoMark size={14} /> FINMEI Financial</p>
       </div>
     </div>
   );

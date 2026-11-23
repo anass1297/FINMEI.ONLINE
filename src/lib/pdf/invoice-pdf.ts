@@ -16,7 +16,7 @@ export async function renderInvoicePdf(inv: Full) {
   const doc = await PDFDocument.create();
   doc.setTitle(`Invoice ${inv.number}`);
   doc.setAuthor(inv.business.name);
-  doc.setCreator("Kontora");
+  doc.setCreator("FINMEI Financial");
 
   const W = 595.28, H = 841.89, M = 48;
   const { regular, bold } = await loadFonts(doc, inv.font);

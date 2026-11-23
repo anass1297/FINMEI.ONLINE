@@ -11,7 +11,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           <ThemeToggle compact />
         </div>
         <div className="mx-auto flex w-full max-w-sm flex-1 flex-col justify-center py-12 animate-fade-in">{children}</div>
-        <p className="text-center text-xs text-subtle">© {new Date().getFullYear()} Kontora. All rights reserved.</p>
+        <p className="text-center text-xs text-subtle">© {new Date().getFullYear()} FINMEI Financial. All rights reserved.</p>
       </div>
       <div className="relative hidden overflow-hidden bg-[#0d0b2a] lg:block">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(129,120,255,.45),transparent_45%),radial-gradient(circle_at_80%_70%,rgba(14,165,233,.3),transparent_45%)]" />

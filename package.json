@@ -1,8 +1,8 @@
 {
-  "name": "kontora",
+  "name": "finmei-financial",
   "version": "1.0.0",
   "private": true,
-  "description": "Kontora — financial management SaaS for freelancers, agencies and small businesses",
+  "description": "FINMEI Financial — financial management SaaS for freelancers, agencies and small businesses",
   "scripts": {
     "dev": "next dev",
     "build": "prisma generate && next build",
