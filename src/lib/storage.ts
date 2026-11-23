@@ -1,6 +1,7 @@
 import { promises as fs } from "fs";
 import path from "path";
 import crypto from "crypto";
+import { del, get, put } from "@vercel/blob";
 
 /**
  * Storage abstraction. Local disk implementation; replace with S3/R2/GCS by
@@ -26,6 +27,13 @@ function safePath(key: string) {
 export async function putFile(businessId: string, filename: string, data: Buffer) {
   const ext = path.extname(filename).replace(/[^a-zA-Z0-9.]/g, "").slice(0, 10);
   const key = `${businessId.replace(/[^a-zA-Z0-9_-]/g, "")}/${crypto.randomBytes(16).toString("hex")}${ext}`;
+  if (process.env.BLOB_READ_WRITE_TOKEN) {
+    const blob = await put(key, data, {
+      access: "private",
+      addRandomSuffix: false,
+    });
+    return blob.url;
+  }
   const p = safePath(key);
   await fs.mkdir(path.dirname(p), { recursive: true });
   await fs.writeFile(p, data);
@@ -33,9 +41,18 @@ export async function putFile(businessId: string, filename: string, data: Buffer
 }
 
 export async function getFile(key: string) {
+  if (/^https?:\/\//.test(key)) {
+    const blob = await get(key, { access: "private", useCache: false });
+    if (!blob || blob.statusCode !== 200) throw new Error("File not found");
+    return Buffer.from(await new Response(blob.stream).arrayBuffer());
+  }
   return fs.readFile(safePath(key));
 }
 
 export async function deleteFile(key: string) {
+  if (/^https?:\/\//.test(key)) {
+    await del(key).catch(() => undefined);
+    return;
+  }
   await fs.unlink(safePath(key)).catch(() => undefined);
 }

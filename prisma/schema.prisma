@@ -1,13 +1,13 @@
 // FINMEI Financial data model.
 // Money is stored as integer minor units (cents) to avoid floating point errors.
-// String "enums" are used so the schema runs on SQLite and PostgreSQL alike.
+// String "enums" keep database values explicit and portable.
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 

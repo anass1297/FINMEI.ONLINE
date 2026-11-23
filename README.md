@@ -12,8 +12,8 @@ each business keeps its own separate data.
 
 ```bash
 npm install
-cp .env.example .env          # then set NEXTAUTH_SECRET (openssl rand -base64 32)
-npx prisma db push            # create the SQLite database
+cp .env.example .env          # set DATABASE_URL and NEXTAUTH_SECRET
+npx prisma migrate deploy     # create the PostgreSQL database schema
 npm run db:seed               # optional demo data
 npm run dev                   # http://localhost:3000
 ```
@@ -68,9 +68,9 @@ A Google account with the same email as an existing account is linked to it (Goo
 
 ## Production deployment
 
-1. **Database:** in `prisma/schema.prisma` change `provider = "sqlite"` to `"postgresql"` and set `DATABASE_URL`. The schema avoids SQLite-only features, so nothing else changes. Use `prisma migrate deploy` for versioned migrations.
+1. **Database:** set `DATABASE_URL` to a PostgreSQL connection string (for example, a Vercel Postgres or Neon database). Run `npx prisma migrate deploy` to apply migrations.
 2. **Secrets:** set `NEXTAUTH_URL`, `NEXTAUTH_SECRET` and `CRON_SECRET`, plus SMTP settings for real emails.
-3. **File storage:** `src/lib/storage.ts` writes to local disk (`UPLOAD_DIR`). On serverless hosts, swap its three functions (`putFile`, `getFile`, `deleteFile`) for S3/R2/GCS.
+3. **File storage:** set `BLOB_READ_WRITE_TOKEN` for Vercel Blob storage. Local development can continue using `UPLOAD_DIR` without that variable.
 4. **Rate limiting:** `src/lib/rate-limit.ts` keeps counts in memory. For several instances, back it with Redis or Upstash.
 5. `npm run build && npm start`.
 

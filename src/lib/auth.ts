@@ -9,6 +9,7 @@ export const googleEnabled = Boolean(process.env.GOOGLE_CLIENT_ID && process.env
 export const requireVerification = process.env.REQUIRE_EMAIL_VERIFICATION !== "false";
 
 export const authOptions: NextAuthOptions = {
+  secret: process.env.NEXTAUTH_SECRET || process.env.AUTH_SECRET || (process.env.NODE_ENV !== "production" ? "finmei-local-development-secret" : undefined),
   session: { strategy: "jwt", maxAge: 60 * 60 * 24 * 14 },
   pages: { signIn: "/login", error: "/login" },
   providers: [
