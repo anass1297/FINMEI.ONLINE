@@ -1,0 +1,297 @@
+// Kontora data model.
+// Money is stored as integer minor units (cents) to avoid floating point errors.
+// String "enums" are used so the schema runs on SQLite and PostgreSQL alike.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String    @id @default(cuid())
+  name             String?
+  email            String    @unique
+  passwordHash     String?
+  googleId         String?   @unique
+  image            String?
+  emailVerified    DateTime?
+  activeBusinessId String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  memberships Membership[]
+  tokens      AuthToken[]
+}
+
+/// Email verification + password reset tokens (only a SHA-256 hash is stored)
+model AuthToken {
+  id        String   @id @default(cuid())
+  userId    String
+  tokenHash String   @unique
+  type      String // VERIFY_EMAIL | RESET_PASSWORD
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, type])
+}
+
+model Business {
+  id      String  @id @default(cuid())
+  name    String
+  logo    String? // data URL (PNG/JPEG, <= 512KB)
+  email   String?
+  phone   String?
+  website String?
+  taxId   String?
+
+  addressLine1 String?
+  addressLine2 String?
+  city         String?
+  state        String?
+  postalCode   String?
+  country      String?
+
+  currency           String @default("USD")
+  invoicePrefix      String @default("INV-")
+  nextInvoiceNumber  Int    @default(1)
+  invoiceNumberPad   Int    @default(4)
+  defaultPaymentDays Int    @default(30)
+  defaultTaxRate     Float  @default(0)
+  taxLabel           String @default("Tax")
+  defaultNotes       String?
+  defaultTerms       String?
+
+  bankName            String?
+  bankAccountName     String?
+  bankAccountNumber   String?
+  iban                String?
+  swift               String?
+  paymentInstructions String?
+
+  brandColor      String @default("#4f46e5")
+  invoiceFont     String @default("sans") // sans | serif | mono
+  invoiceTemplate String @default("modern") // modern | classic | minimal
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  memberships       Membership[]
+  customers         Customer[]
+  invoices          Invoice[]
+  expenses          Expense[]
+  expenseCategories ExpenseCategory[]
+  payments          Payment[]
+  recurring         RecurringInvoice[]
+  attachments       Attachment[]
+}
+
+model Membership {
+  id         String   @id @default(cuid())
+  userId     String
+  businessId String
+  role       String   @default("OWNER") // OWNER | ADMIN | MEMBER
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, businessId])
+}
+
+model Customer {
+  id           String   @id @default(cuid())
+  businessId   String
+  name         String
+  company      String?
+  email        String?
+  phone        String?
+  addressLine1 String?
+  addressLine2 String?
+  city         String?
+  state        String?
+  postalCode   String?
+  country      String?
+  taxId        String?
+  currency     String?
+  notes        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  business  Business           @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  invoices  Invoice[]
+  recurring RecurringInvoice[]
+
+  @@index([businessId])
+}
+
+model Invoice {
+  id          String  @id @default(cuid())
+  businessId  String
+  customerId  String?
+  recurringId String?
+  number      String
+  status      String  @default("DRAFT") // DRAFT | SENT | PARTIAL | PAID | OVERDUE | CANCELLED
+
+  issueDate   DateTime
+  dueDate     DateTime
+  paymentDays Int      @default(30)
+  currency    String   @default("USD")
+
+  discountType  String @default("percent") // percent | fixed
+  discountValue Float  @default(0)
+
+  subtotal      Int @default(0)
+  discountTotal Int @default(0)
+  taxTotal      Int @default(0)
+  total         Int @default(0)
+  amountPaid    Int @default(0)
+
+  taxLabel            String  @default("Tax")
+  notes               String?
+  terms               String?
+  paymentInstructions String?
+
+  template String @default("modern")
+  color    String @default("#4f46e5")
+  font     String @default("sans")
+
+  // Snapshot of customer details at time of issuing (keeps PDFs stable)
+  customerSnapshot String?
+
+  publicToken String    @unique
+  sentAt      DateTime?
+  paidAt      DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  business  Business          @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  customer  Customer?         @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  recurring RecurringInvoice? @relation(fields: [recurringId], references: [id], onDelete: SetNull)
+  items     InvoiceItem[]
+  payments  Payment[]
+
+  @@unique([businessId, number])
+  @@index([businessId, status])
+  @@index([businessId, issueDate])
+}
+
+model InvoiceItem {
+  id          String  @id @default(cuid())
+  invoiceId   String
+  description String
+  quantity    Float   @default(1)
+  unitPrice   Int     @default(0)
+  taxRate     Float   @default(0)
+  sortOrder   Int     @default(0)
+  invoice     Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+}
+
+/// A payment is only recorded when explicitly entered by the user (manual)
+/// or when a provider webhook has been cryptographically verified.
+model Payment {
+  id          String   @id @default(cuid())
+  businessId  String
+  invoiceId   String
+  amount      Int
+  currency    String
+  date        DateTime
+  method      String // BANK_TRANSFER | CASH | CARD | CHECK | PAYPAL | STRIPE | OTHER
+  reference   String?
+  notes       String?
+  provider    String   @default("manual") // manual | stripe | paypal
+  providerRef String?  @unique
+  status      String   @default("COMPLETED") // COMPLETED | PENDING | FAILED | REFUNDED
+  createdAt   DateTime @default(now())
+
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  invoice  Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  @@index([businessId, date])
+}
+
+model ExpenseCategory {
+  id         String    @id @default(cuid())
+  businessId String
+  name       String
+  color      String    @default("#64748b")
+  business   Business  @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  expenses   Expense[]
+
+  @@unique([businessId, name])
+}
+
+model Expense {
+  id          String   @id @default(cuid())
+  businessId  String
+  categoryId  String?
+  description String
+  vendor      String?
+  date        DateTime
+  amount      Int // total amount paid incl. tax
+  currency    String
+  taxRate     Float    @default(0)
+  taxAmount   Int      @default(0)
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  business    Business         @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  category    ExpenseCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  attachments Attachment[]
+
+  @@index([businessId, date])
+}
+
+model Attachment {
+  id         String   @id @default(cuid())
+  businessId String
+  expenseId  String?
+  filename   String
+  mimeType   String
+  size       Int
+  storageKey String   @unique
+  createdAt  DateTime @default(now())
+
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  expense  Expense? @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+}
+
+model RecurringInvoice {
+  id         String  @id @default(cuid())
+  businessId String
+  customerId String?
+  name       String
+
+  frequency     String   @default("MONTHLY") // WEEKLY | MONTHLY | QUARTERLY | YEARLY | CUSTOM
+  intervalCount Int      @default(1) // for CUSTOM
+  intervalUnit  String   @default("MONTH") // DAY | WEEK | MONTH | YEAR (for CUSTOM)
+  startDate     DateTime
+  nextRunDate   DateTime
+  endDate       DateTime?
+  maxOccurrences Int?
+  generatedCount Int     @default(0)
+  status        String   @default("ACTIVE") // ACTIVE | PAUSED | ENDED
+  autoSend      Boolean  @default(false)
+  lastRunAt     DateTime?
+
+  currency      String
+  paymentDays   Int    @default(30)
+  discountType  String @default("percent")
+  discountValue Float  @default(0)
+  itemsJson     String // [{description, quantity, unitPrice, taxRate}]
+  notes         String?
+  terms         String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  business Business  @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  customer Customer? @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  invoices Invoice[]
+
+  @@index([status, nextRunDate])
+}

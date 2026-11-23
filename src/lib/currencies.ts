@@ -1,0 +1,26 @@
+export const CURRENCIES = [
+  { code: "USD", name: "US Dollar" },
+  { code: "EUR", name: "Euro" },
+  { code: "GBP", name: "British Pound" },
+  { code: "CAD", name: "Canadian Dollar" },
+  { code: "AUD", name: "Australian Dollar" },
+  { code: "CHF", name: "Swiss Franc" },
+  { code: "JPY", name: "Japanese Yen" },
+  { code: "CNY", name: "Chinese Yuan" },
+  { code: "INR", name: "Indian Rupee" },
+  { code: "BRL", name: "Brazilian Real" },
+  { code: "MXN", name: "Mexican Peso" },
+  { code: "ZAR", name: "South African Rand" },
+  { code: "NGN", name: "Nigerian Naira" },
+  { code: "MAD", name: "Moroccan Dirham" },
+  { code: "XOF", name: "West African CFA Franc" },
+  { code: "AED", name: "UAE Dirham" },
+  { code: "SEK", name: "Swedish Krona" },
+  { code: "NOK", name: "Norwegian Krone" },
+  { code: "DKK", name: "Danish Krone" },
+  { code: "PLN", name: "Polish Złoty" },
+  { code: "SGD", name: "Singapore Dollar" },
+  { code: "NZD", name: "New Zealand Dollar" },
+] as const;
+
+export const CURRENCY_CODES = CURRENCIES.map((c) => c.code) as string[];
