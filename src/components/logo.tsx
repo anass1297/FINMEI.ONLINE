@@ -8,9 +8,9 @@ export function LogoMark({ size = 28 }: { size?: number }) {
 }
 export function Logo() {
   return (
-    <span className="inline-flex">
-      <img src="/finmei-logo.png" alt="FINMEI Financial" className="h-12 w-auto max-w-[190px] object-contain dark:hidden" />
-      <img src="/finmei-logo-dark.png" alt="FINMEI Financial" className="hidden h-12 w-auto max-w-[190px] object-contain dark:block" />
+    <span className="inline-flex items-center justify-center">
+      <img src="/finmei-logo.png" alt="FINMEI Financial" className="h-20 w-auto max-w-[210px] object-contain dark:hidden" />
+      <img src="/finmei-logo-dark.png" alt="FINMEI Financial" className="hidden h-20 w-auto max-w-[210px] object-contain dark:block" />
     </span>
   );
 }

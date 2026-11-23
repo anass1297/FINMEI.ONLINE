@@ -124,7 +124,7 @@ export function AppShell({ children, business, businesses, user }: { children: R
 
   const sidebar = (
     <div className="flex h-full flex-col gap-4 p-3">
-      <div className="flex items-center justify-between px-1.5 pt-1"><Link href="/dashboard"><Logo /></Link>
+      <div className="flex items-center justify-center px-1.5 pb-2 pt-3"><Link href="/dashboard" className="flex w-full justify-center"><Logo /></Link>
         <button className="rounded-md p-1 text-subtle lg:hidden" onClick={() => setMobile(false)} aria-label="Close menu"><X size={18} /></button></div>
       <BusinessSwitcher current={business} all={businesses} />
       <nav className="flex flex-col gap-0.5">{NAV.map((n) => <NavLink key={n.href} {...n} />)}</nav>
